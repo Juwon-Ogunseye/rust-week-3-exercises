@@ -15,7 +15,6 @@ pub enum BitcoinError {
 
 impl CompactSize {
     pub fn new(value: u64) -> Self {
-        //this should work
         // TODO: Construct a CompactSize from a u64 value
         CompactSize { value }
     }
@@ -197,7 +196,11 @@ pub struct TransactionInput {
 impl TransactionInput {
     pub fn new(previous_output: OutPoint, script_sig: Script, sequence: u32) -> Self {
         // TODO: Basic constructor
-        TransactionInput { previous_output, script_sig, sequence }
+        TransactionInput {
+            previous_output,
+            script_sig,
+            sequence,
+        }
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
@@ -233,7 +236,14 @@ impl TransactionInput {
         ]);
         offset += 4;
 
-        Ok((TransactionInput { previous_output: outpoint, script_sig: script, sequence }, offset))
+        Ok((
+            TransactionInput {
+                previous_output: outpoint,
+                script_sig: script,
+                sequence,
+            },
+            offset,
+        ))
     }
 }
 
@@ -247,7 +257,11 @@ pub struct BitcoinTransaction {
 impl BitcoinTransaction {
     pub fn new(version: u32, inputs: Vec<TransactionInput>, lock_time: u32) -> Self {
         // TODO: Construct a transaction from parts
-        BitcoinTransaction { version, inputs, lock_time }
+        BitcoinTransaction {
+            version,
+            inputs,
+            lock_time,
+        }
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
@@ -301,7 +315,14 @@ impl BitcoinTransaction {
         ]);
         offset += 4;
 
-        Ok((BitcoinTransaction { version, inputs, lock_time }, offset))
+        Ok((
+            BitcoinTransaction {
+                version,
+                inputs,
+                lock_time,
+            },
+            offset,
+        ))
     }
 }
 
@@ -314,9 +335,22 @@ impl fmt::Display for BitcoinTransaction {
         writeln!(f, "  Inputs: [")?;
         for (i, input) in self.inputs.iter().enumerate() {
             writeln!(f, "    Input {} {{", i)?;
-            writeln!(f, "      Previous Output Txid: {}", hex::encode(input.previous_output.txid.0))?;
-            writeln!(f, "      Previous Output Vout: {}", input.previous_output.vout)?;
-            writeln!(f, "      ScriptSig ({} bytes): {}", input.script_sig.bytes.len(), hex::encode(&input.script_sig.bytes))?;
+            writeln!(
+                f,
+                "      Previous Output Txid: {}",
+                hex::encode(input.previous_output.txid.0)
+            )?;
+            writeln!(
+                f,
+                "      Previous Output Vout: {}",
+                input.previous_output.vout
+            )?;
+            writeln!(
+                f,
+                "      ScriptSig ({} bytes): {}",
+                input.script_sig.bytes.len(),
+                hex::encode(&input.script_sig.bytes)
+            )?;
             writeln!(f, "      Sequence: {:#010x}", input.sequence)?;
             writeln!(f, "    }}")?;
         }
