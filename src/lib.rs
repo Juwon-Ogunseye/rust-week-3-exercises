@@ -15,6 +15,7 @@ pub enum BitcoinError {
 
 impl CompactSize {
     pub fn new(value: u64) -> Self {
+        //this should work
         // TODO: Construct a CompactSize from a u64 value
         CompactSize { value }
     }
