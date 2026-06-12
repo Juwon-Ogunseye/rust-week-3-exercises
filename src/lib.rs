@@ -70,8 +70,7 @@ impl CompactSize {
                     return Err(BitcoinError::InsufficientBytes);
                 }
                 let val = u64::from_le_bytes([
-                    bytes[1], bytes[2], bytes[3], bytes[4],
-                    bytes[5], bytes[6], bytes[7], bytes[8],
+                    bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7], bytes[8],
                 ]);
                 Ok((CompactSize { value: val }, 9))
             }
@@ -121,7 +120,10 @@ pub struct OutPoint {
 impl OutPoint {
     pub fn new(txid: [u8; 32], vout: u32) -> Self {
         // TODO: Create an OutPoint from raw txid bytes and output index
-        OutPoint { txid: Txid(txid), vout }
+        OutPoint {
+            txid: Txid(txid),
+            vout,
+        }
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
@@ -141,7 +143,13 @@ impl OutPoint {
         let mut txid = [0u8; 32];
         txid.copy_from_slice(&bytes[0..32]);
         let vout = u32::from_le_bytes([bytes[32], bytes[33], bytes[34], bytes[35]]);
-        Ok((OutPoint { txid: Txid(txid), vout }, 36))
+        Ok((
+            OutPoint {
+                txid: Txid(txid),
+                vout,
+            },
+            36,
+        ))
     }
 }
 
@@ -174,7 +182,12 @@ impl Script {
             return Err(BitcoinError::InsufficientBytes);
         }
         let script_bytes = bytes[cs_len..total].to_vec();
-        Ok((Script { bytes: script_bytes }, total))
+        Ok((
+            Script {
+                bytes: script_bytes,
+            },
+            total,
+        ))
     }
 }
 
